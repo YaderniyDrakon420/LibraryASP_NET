@@ -10,8 +10,7 @@ namespace Books.Application.Interfaces.Services;
 
 public interface IGenreService
 {
-    
     Task<int?> CreateGenreAsync(GenreCreateDto dto);
-    Task<BookReadDto?> GetGenreByIdAsync(int id);
+    Task<GenreReadDto?> GetGenreByIdAsync(int id);
     Task<ICollection<GenreReadDto>> GetAllGenresAsync();
 }

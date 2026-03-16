@@ -16,46 +16,40 @@ public class GenreRepository : IGenreRepository
         _context = context;
     }
 
-    public async Task<int?> AddGenreAsync(GenreEntity genre)
+    public async Task AddAsync(GenreEntity genre)
     {
         await _context.Genres.AddAsync(genre);
         await _context.SaveChangesAsync();
-        return genre.Id;
     }
 
-    public async Task<ICollection<GenreEntity>> GetAllGenreAsync()
+    public async Task<ICollection<GenreEntity>> GetAllAsync()
     {
-        return await _context.Genres.ToListAsync();
+        return await _context.Genres.Include(g => g.Books).ToListAsync();
     }
 
-    public async Task<GenreEntity?> GetGenreByIdAsync(int id)
+    public async Task<GenreEntity?> GetByIdAsync(int id)
     {
-        return await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
+        return await _context.Genres.Include(g => g.Books)
+                                    .FirstOrDefaultAsync(g => g.Id == id);
     }
 
-    public async Task<bool> UpdateGenreAsync(GenreEntity genre)
+    public async Task<bool> UpdateAsync(GenreEntity genre)
     {
-        var existingGenre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == genre.Id);
+        var existing = await _context.Genres.FirstOrDefaultAsync(g => g.Id == genre.Id);
+        if (existing == null) return false;
 
-        if (existingGenre == null)
-            return false;
-
-        existingGenre.Title = genre.Title;
-
+        existing.Title = genre.Title;
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<bool> DeleteGenreAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
         var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
-
-        if (genre == null)
-            return false;
+        if (genre == null) return false;
 
         _context.Genres.Remove(genre);
         await _context.SaveChangesAsync();
-
         return true;
     }
 }

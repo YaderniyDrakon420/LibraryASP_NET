@@ -44,5 +44,13 @@ namespace Books.Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchAuthors([FromQuery] string query)
+        {
+            var authors = await _authorService.GetAllAuthorsAsync();
+            var result = authors.Where(a => a.Name.Contains(query, StringComparison.OrdinalIgnoreCase));
+            return Ok(result);
+        }
     }
 }

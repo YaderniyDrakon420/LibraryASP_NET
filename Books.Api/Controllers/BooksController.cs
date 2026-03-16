@@ -39,5 +39,29 @@ public class BooksController(IBookService _bookService):ControllerBase
         }
     }
 
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchBooks(
+    [FromQuery] int? authorId,
+    [FromQuery] int? genreId,
+    [FromQuery] int? year,
+    [FromQuery] string? title)
+    {
+        var books = await _bookService.GetAllBooksAsync();
+
+        if (authorId != null)
+            books = books.Where(b => b.AuthorsId.Contains(authorId.Value)).ToList();
+
+        if (genreId != null)
+            books = books.Where(b => b.GenreId == genreId.Value).ToList();
+
+        if (year != null)
+            books = books.Where(b => b.Year == year.Value).ToList();
+
+        if (!string.IsNullOrWhiteSpace(title))
+            books = books.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        return Ok(books);
+    }
+
 
 }
