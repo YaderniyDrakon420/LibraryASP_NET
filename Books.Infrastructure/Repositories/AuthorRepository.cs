@@ -35,4 +35,30 @@ public class AuthorRepository : IAuthorRepository
     {
       return await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
     }
+
+    public async Task<bool> UpdateAuthorAsync(AuthorEntity author)
+    {
+        var existingAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Id == author.Id);
+
+        if (existingAuthor == null)
+            return false;
+
+        existingAuthor.Name = author.Name;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAuthorAsync(int id)
+    {
+        var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == id);
+
+        if (author == null)
+            return false;
+
+        _context.Authors.Remove(author);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }
