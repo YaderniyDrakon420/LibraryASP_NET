@@ -14,7 +14,7 @@ public interface IUserRepository
     /// </summary>
     /// <param name="user"></param>
     /// <returns></returns>
-    Task<string> AddUserAsync(UserEntity user, string password);
+    Task<UserEntity> AddUserAsync(UserEntity user);
     Task<ICollection<UserEntity>> GetAllUserAsync();
     Task<UserEntity?> GetUserByEmailAsync(string email);
 }

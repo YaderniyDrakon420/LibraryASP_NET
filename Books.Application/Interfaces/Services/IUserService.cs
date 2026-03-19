@@ -14,7 +14,7 @@ public interface IUserService
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    Task<string> CreateUserAsync(UserCreateDto dto);
-    Task<ICollection<UserReadDto>> GetAllUserAsync();
-    Task<UserReadDto?> GetByEmailUserAsync(string email);
+    Task<UserReadDto> CreateUserAsync(UserCreateDto dto);
+    Task<ICollection<UserReadDto>> GetAllAsync();
+    Task<UserReadDto?> GetByEmailAsync(string email);
 }

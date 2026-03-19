@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
+using BCrypt.Net;
 using Books.Application.DTOs.UserDTOs;
 using Books.Application.Interfaces.Repositories;
 using Books.Application.Interfaces.Services;
 using Books.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Books.Application.Services;
 
@@ -21,18 +17,25 @@ public class UserService : IUserService
         _userRepository = userRepository;
         _mapper = mapper;
     }
-    public async Task<string> CreateUserAsync(UserCreateDto dto)
+
+    public async Task<UserReadDto> CreateUserAsync(UserCreateDto dto)
     {
         var entity = _mapper.Map<UserEntity>(dto);
-        return await _userRepository.AddUserAsync(entity, dto.Password);
+
+        entity.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(dto.Password);
+
+        var created = await _userRepository.AddUserAsync(entity);
+
+        return _mapper.Map<UserReadDto>(created);
     }
 
-    public async Task<ICollection<UserReadDto>> GetAllUserAsync()
+    public async Task<ICollection<UserReadDto>> GetAllAsync()
     {
         var users = await _userRepository.GetAllUserAsync();
         return _mapper.Map<ICollection<UserReadDto>>(users);
     }
-    public async Task<UserReadDto?> GetByEmailUserAsync(string email)
+
+    public async Task<UserReadDto?> GetByEmailAsync(string email)
     {
         var user = await _userRepository.GetUserByEmailAsync(email);
         if (user == null) return null;
