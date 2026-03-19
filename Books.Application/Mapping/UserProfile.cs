@@ -13,7 +13,9 @@ public class UserProfile:Profile
 {
     public UserProfile()
     {
-        CreateMap<UserCreateDto, UserEntity>();
+        CreateMap<UserCreateDto, UserEntity>()
+    .ForMember(dest => dest.PasswordHash,
+               opt => opt.MapFrom(src => src.Password));
 
         CreateMap<UserEntity, UserReadDto>().ForMember(dest=>dest.Role, opt=> opt.MapFrom(
             src=>src.Role.ToString()));

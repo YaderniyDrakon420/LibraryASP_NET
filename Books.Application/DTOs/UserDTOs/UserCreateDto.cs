@@ -11,10 +11,13 @@ namespace Books.Application.DTOs.UserDTOs;
 /// <summary>
 /// Реэстрація користувача
 /// </summary>
-public  class UserCreateDto
+public class UserCreateDto
 {
     [Required]
     [EmailAddress]
     public string Email { get; set; }
+
+    [Required]
+    [MinLength(6)]
     public string Password { get; set; }
 }
