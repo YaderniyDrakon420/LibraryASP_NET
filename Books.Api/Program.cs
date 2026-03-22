@@ -31,6 +31,14 @@ namespace Books.Api
                typeof(GenreProfile).Assembly,
                typeof(UserProfile).Assembly
             );
+            builder.Services.AddSingleton<IJwtService>(provider =>
+            {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var secret = configuration["Jwt:Secret"];
+                var expiryMinutes = int.Parse(configuration["Jwt:ExpiryMinutes"]);
+
+                return new JwtService(secret, expiryMinutes);
+            });
             // Add services to the container.
             builder.Services.AddScoped<IBookRepository, BookRepository>();
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();

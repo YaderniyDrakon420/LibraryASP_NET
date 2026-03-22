@@ -19,6 +19,7 @@ public class LibraryDbContext:DbContext
         
     }
     public DbSet<BookAuthorEntity> BookAuthors { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,7 +42,7 @@ public class LibraryDbContext:DbContext
 
         modelBuilder.Entity<UserEntity>().HasIndex(u => u.Email).IsUnique();
 
-        // --- Настройка many-to-many Book <-> Author ---
+        
         modelBuilder.Entity<BookAuthorEntity>()
             .HasKey(ba => new { ba.BookId, ba.AuthorId });
 
