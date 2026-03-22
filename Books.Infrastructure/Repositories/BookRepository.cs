@@ -37,11 +37,23 @@ public class BookRepository : IBookRepository
     {
         await ValidateGenreAsync(book.GenreId);
 
-        if (authorIds != null)
-            book.Authors = await GetAuthorsAsync(authorIds);
-
         _context.Books.Add(book);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(); // Сохраняем книгу, чтобы получить Id
+
+        if (authorIds != null && authorIds.Any())
+        {
+            var authors = await GetAuthorsAsync(authorIds);
+            foreach (var author in authors)
+            {
+                _context.BookAuthors.Add(new BookAuthorEntity
+                {
+                    BookId = book.Id,
+                    AuthorId = author.Id
+                });
+            }
+            await _context.SaveChangesAsync();
+        }
+
         return book.Id;
     }
 

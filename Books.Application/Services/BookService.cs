@@ -26,6 +26,26 @@ public class BookService : IBookService
     public async Task<int?> CreateBookAsync(BookCreateDto dto)
     {
         var book = _mapper.Map<BookEntity>(dto);
+
+        if (dto.Image != null)
+        {
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.Image.FileName);
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await dto.Image.CopyToAsync(stream);
+            }
+
+            book.ImagePath = "/images/" + fileName;
+        }
+
         return await _repository.AddBookAsync(book, dto.AuthorsId);
     }
 

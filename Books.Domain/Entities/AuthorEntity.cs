@@ -11,6 +11,6 @@ public class AuthorEntity
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Surname { get; set; } = string.Empty;
-    public ICollection<BookEntity>? Books { get; set; }
 
+    public ICollection<BookAuthorEntity> BookAuthors { get; set; } = new List<BookAuthorEntity>();
 }

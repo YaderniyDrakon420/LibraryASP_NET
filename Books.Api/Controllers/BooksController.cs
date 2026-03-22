@@ -24,19 +24,18 @@ public class BooksController(IBookService _bookService):ControllerBase
         return Ok(book);
     }
 
-  
+
     [HttpPost]
-    public async Task<IActionResult> AddBook([FromBody] BookCreateDto bookDto)
+    public async Task<IActionResult> AddBook([FromForm] BookCreateDto bookDto)
     {
         int? id = await _bookService.CreateBookAsync(bookDto);
+
         if (id != null)
         {
-            return CreatedAtAction(nameof(GetBookById), new { id}, id);
+            return CreatedAtAction(nameof(GetBookById), new { id }, id);
         }
-        else
-        {
-            return BadRequest();
-        }
+
+        return BadRequest();
     }
 
     [HttpGet("search")]

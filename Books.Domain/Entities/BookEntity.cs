@@ -14,6 +14,8 @@ public class BookEntity
 
     public int GenreId { get; set; }
     public GenreEntity? Genre { get; set; }
-    public ICollection<AuthorEntity>? Authors { get; set; }
+    public ICollection<AuthorEntity> Authors { get; set; } = new List<AuthorEntity>();
+    public ICollection<BookAuthorEntity> BookAuthors { get; set; } = new List<BookAuthorEntity>();
     public DateTime? CreatedAt { get; }
+    public string ImagePath { get; set; }
 }

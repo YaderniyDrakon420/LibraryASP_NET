@@ -18,16 +18,19 @@ public class LibraryDbContext:DbContext
     {
         
     }
+    public DbSet<BookAuthorEntity> BookAuthors { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         if (Database.IsMySql())
         {
             modelBuilder.Entity<BookEntity>()
-    .Property(b => b.CreatedAt)
-    .HasColumnType("datetime(6)")        // точность микросекунд
-    .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
-    .ValueGeneratedOnAdd();
+                .Property(b => b.CreatedAt)
+                .HasColumnType("datetime(6)")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")
+                .ValueGeneratedOnAdd();
         }
         else if (Database.IsSqlServer())
         {
@@ -35,7 +38,21 @@ public class LibraryDbContext:DbContext
                 .Property(b => b.CreatedAt)
                 .HasDefaultValueSql("SYSDATETIME()");
         }
+
         modelBuilder.Entity<UserEntity>().HasIndex(u => u.Email).IsUnique();
 
+        // --- Настройка many-to-many Book <-> Author ---
+        modelBuilder.Entity<BookAuthorEntity>()
+            .HasKey(ba => new { ba.BookId, ba.AuthorId });
+
+        modelBuilder.Entity<BookAuthorEntity>()
+            .HasOne(ba => ba.Book)
+            .WithMany(b => b.BookAuthors)
+            .HasForeignKey(ba => ba.BookId);
+
+        modelBuilder.Entity<BookAuthorEntity>()
+            .HasOne(ba => ba.Author)
+            .WithMany(a => a.BookAuthors)
+            .HasForeignKey(ba => ba.AuthorId);
     }
 }

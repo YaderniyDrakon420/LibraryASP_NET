@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Books.Application.DTOs.BookDTOs;
 
@@ -13,5 +14,6 @@ public class BookCreateDto
     public int Year { get; set; }
     public int GenreId { get; set; }
     public ICollection<int>? AuthorsId { get; set; }
+    public IFormFile? Image { get; set; }
 }
 

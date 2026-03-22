@@ -61,6 +61,7 @@ namespace Books.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
             app.UseExceptionHandler();

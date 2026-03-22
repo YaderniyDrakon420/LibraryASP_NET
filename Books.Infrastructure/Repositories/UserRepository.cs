@@ -21,12 +21,11 @@ public class UserRepository:IUserRepository
         _context = context;
         _helper = helper;
     }
-    public async Task<string> AddUserAsync(UserEntity user, string password)
+    public async Task<UserEntity> AddUserAsync(UserEntity user)
     {
-        user.PasswordHash = _helper.Hash(password);
-        await _context.Users.AddAsync(user);
+        _context.Users.Add(user);
         await _context.SaveChangesAsync();
-        return user.Email;
+        return user;
     }
 
     public async Task<ICollection<UserEntity>> GetAllUserAsync()
